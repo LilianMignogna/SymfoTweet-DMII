@@ -15,8 +15,6 @@ class SymfotweetsFormType extends AbstractType
     {
         $builder
             ->add('text', TextareaType::class)
-            ->add('postdate', DateType::class)
-            ->add('post', SubmitType::class)
         ;
     }
 }

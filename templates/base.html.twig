@@ -11,7 +11,7 @@
     	<div class="container">
             <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <a class="navbar-brand text-primary" href="/">Symfotweet</a>
+                    <a class="navbar-brand text-primary" href="/">SymfoTweet</a>
 
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -34,6 +34,9 @@
             <main>
                 {% block body %}{% endblock %}
             </main>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a class="action-button btn-primary rounded-pill p-3" href="/symfotweets/new">Post</a>
+            {% endif %}
             <footer class="my-5 pt-5 text-muted text-center text-small">
                 <p class="mb-1">© 2022 Symfotweet Corp</p>
                 <ul class="list-inline">

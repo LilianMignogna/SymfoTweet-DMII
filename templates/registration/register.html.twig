@@ -3,17 +3,43 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
-
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.username) }}
-        {{ form_row(registrationForm.biography) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+    <div class="card p-5 col-6 mx-auto">
+        <h1>Créer un compte</h1>
+        
+        {{ form_start(registrationForm) }}
+            <div class="form-group mb-2">
+                {{ form_row(registrationForm.email, {
+                    label: 'Adresse e-mail',
+                    attr: {'class': 'form-control'}
+                })  }}
+            </div>
+            <div class="form-group mb-2">
+                {{ form_row(registrationForm.username, {
+                    label: 'Nom d\'utilisateur',
+                    attr: {'class': 'form-control'}
+                })  }}
+            </div>
+            <div class="form-group mb-2">
+                {{ form_row(registrationForm.biography, {
+                    label: 'Bio',
+                    attr: {'class': 'form-control'}
+                })  }}
+            </div>
+            <div class="form-group mb-2">
+                {{ form_row(registrationForm.plainPassword, {
+                    label: 'Mot de passe',
+                    attr: {'class': 'form-control'}
+                }) }}
+            </div>
+            <div class="form-group mb-2">
+                {{ form_row(registrationForm.agreeTerms, {
+                    label: 'Accepter les conditions d\'utilisation',
+                    attr: {'class': 'form-check-input'}
+                })  }}
+            </div>
+            <div class="d-flex justify-content-center mt-5">
+                <button type="submit" class="btn btn-primary">Créer le compte</button>
+            </div>
+        {{ form_end(registrationForm) }}
+    </div>
 {% endblock %}
