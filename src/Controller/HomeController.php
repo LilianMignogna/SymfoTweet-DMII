@@ -21,32 +21,11 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/new-symfotweet', name: 'post_symfotweet')]
-    public function newSymfotweet(Request $request): Response
-    {
-        $symfoTweets = new Symfotweets();
-
-        $form = $this->createForm(SymfotweetsFormType::class, $symfoTweets);
-
-        return $this->render('home/new_symfotweet.html.twig', [
-            'form' => $form,
-        ]);
-    }
-
     #[Route('/profile', name: 'profile')]
     public function profile(): Response
     {
 
         return $this->render('home/profile.html.twig', [
-            "home" => "home",
-        ]);
-    }
-
-    #[Route('/symfotweets', name: 'symfotweets_list')]
-    public function list(): Response
-    {
-        // ...
-        return $this->render('home/listing.html.twig', [
             "home" => "home",
         ]);
     }
