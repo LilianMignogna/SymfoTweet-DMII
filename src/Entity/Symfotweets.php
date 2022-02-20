@@ -13,6 +13,10 @@ class Symfotweets
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[ORM\ManyToOne(targetEntity: Symfotweetos::class, inversedBy: 'symfotweets')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $symfotweetos;
+
     #[ORM\Column(type: 'string', length: 255)]
     private $text;
 
@@ -22,6 +26,17 @@ class Symfotweets
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getSymfotweetos(): ?Symfotweetos
+    {
+        return $this->symfotweetos;
+    }
+
+    public function setSymfotweetos(?Symfotweetos $symfotweetos): self
+    {
+        $this->symfotweetos = $symfotweetos;
+        return $this;
     }
 
     public function getText(): ?string

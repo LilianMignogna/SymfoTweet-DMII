@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
@@ -33,6 +35,14 @@ class Symfotweetos implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string')]
     private $password;
+
+    #[ORM\OneToMany(mappedBy: 'symfotweetos', targetEntity: Symfotweets::class, orphanRemoval: true)]
+    private $symfotweets;
+
+    public function __construct()
+    {
+        $this->symfotweets = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -126,5 +136,36 @@ class Symfotweetos implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|Symfotweets[]
+     *
+     */
+    public function getSymfotweets(): Collection
+    {
+        return $this->symfotweets;
+    }
+
+    public function addSymfotweets(Symfotweets $symfotweets): self
+    {
+        if (!$this->symfotweets->contains($symfotweets)) {
+            $this->symfotweets[] = $symfotweets;
+            $symfotweets->setSymfotweetos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSymfotweets(Symfotweets $symfotweets): self
+    {
+        if ($this->symfotweets->removeElement($symfotweets)) {
+            // set the owning side to null (unless already changed)
+            if ($symfotweets->getSymfotweetos() === $this) {
+                $symfotweets->setSymfotweetos(null);
+            }
+        }
+
+        return $this;
     }
 }

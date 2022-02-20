@@ -23,28 +23,60 @@ class SymfotweetsController extends AbstractController
         $form = $this->createForm(SymfotweetsFormType::class, $symfoTweets);
         $form->handleRequest($request);
 
+        /** @var \App\Entity\Symfotweetos $user */
+        $user = $this->getUser();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $doctrine->getManager();
 
             $symfoTweets = $form->getData();
             $symfoTweets->setPostdate(new \DateTime());
+            $symfoTweets->setSymfotweetos($user);
 
             $entityManager->persist($symfoTweets);
             $entityManager->flush();
             return $this->redirectToRoute('home');
         }
 
-        return $this->render('home/new_symfotweet.html.twig', [
+        return $this->render('symfotweets/new_symfotweet.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
     #[Route('/symfotweets', name: 'symfotweets_list')]
-    public function list(): Response
+    public function list(ManagerRegistry $doctrine): Response
     {
-        // ...
-        return $this->render('home/listing.html.twig', [
-            "home" => "home",
+        $repository = $doctrine->getRepository(Symfotweets::class);
+        $symfotweets = $repository->findAll();
+
+        return $this->render('symfotweets/listing.html.twig', [
+            "home"        => "home",
+            "symfotweets" => $symfotweets
         ]);
+    }
+
+    #[Route('/symfotweets/{symfotweets_id}', name: 'symfotweets_alone')]
+    #[ParamConverter('symfotweets_id', options: ['mapping' => ['symfotweets_id' => 'id']])]
+    public function alone(string $symfotweets_id, ManagerRegistry $doctrine): Response
+    {
+        $symfotweet = $doctrine->getRepository(Symfotweets::class)->find($symfotweets_id);
+
+        return $this->render('symfotweets/alone.html.twig', [
+            "home"        => "home",
+            "symfotweet" => $symfotweet
+        ]);
+    }
+
+    #[Route('/symfotweets/delete/{symfotweets_id}', name: 'symfotweets_delete')]
+    #[ParamConverter('symfotweets_id', options: ['mapping' => ['symfotweets_id' => 'id']])]
+    public function delete(string $symfotweets_id, ManagerRegistry $doctrine): Response
+    {
+        $symfotweet = $doctrine->getRepository(Symfotweets::class)->find($symfotweets_id);
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->remove($symfotweet);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('symfotweets_list');
     }
 }
