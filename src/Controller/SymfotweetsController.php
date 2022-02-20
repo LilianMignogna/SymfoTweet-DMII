@@ -50,7 +50,6 @@ class SymfotweetsController extends AbstractController
         $symfotweets = $repository->findAll();
 
         return $this->render('symfotweets/listing.html.twig', [
-            "home"        => "home",
             "symfotweets" => $symfotweets
         ]);
     }
@@ -61,8 +60,13 @@ class SymfotweetsController extends AbstractController
     {
         $symfotweet = $doctrine->getRepository(Symfotweets::class)->find($symfotweets_id);
 
+        if (!$symfotweet) {
+            throw $this->createNotFoundException(
+                'No symfotweet found for id '.$symfotweets_id
+            );
+        }
+
         return $this->render('symfotweets/alone.html.twig', [
-            "home"        => "home",
             "symfotweet" => $symfotweet
         ]);
     }
@@ -72,6 +76,12 @@ class SymfotweetsController extends AbstractController
     public function delete(string $symfotweets_id, ManagerRegistry $doctrine): Response
     {
         $symfotweet = $doctrine->getRepository(Symfotweets::class)->find($symfotweets_id);
+
+        if (!$symfotweet) {
+            throw $this->createNotFoundException(
+                'No symfotweet found for id '.$symfotweets_id
+            );
+        }
 
         $entityManager = $doctrine->getManager();
         $entityManager->remove($symfotweet);
