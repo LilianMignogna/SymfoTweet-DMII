@@ -39,6 +39,7 @@ security:
     access_control:
         - { path: '^/symfotweet/add', roles: ROLE_USER }
         - { path: '^/symfotweet/delete', roles: ROLE_USER }
+        - { path: '^/symfotweet/rt', roles: ROLE_USER }
 
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER

@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Symfotweetos;
 use App\Entity\Symfotweets;
+use App\Entity\SymfoRT;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -121,9 +122,16 @@ class AppFixtures extends Fixture
 
         $symfotweets6 = new Symfotweets();
         $manager->persist(
-            $symfotweets6->setText(" Garfield Kart AHAH chuis mort")
+            $symfotweets6->setText("Garfield Kart AHAH chuis mort")
                          ->setPostdate(new \DateTime("now"))
                          ->setSymfotweetos($symfotweetos4)
+        );
+        $manager->flush();
+
+        $symfort = new SymfoRT();
+        $manager->persist(
+            $symfort->setSymfotweetos($symfotweetos4)
+                    ->setSymfotweets($symfotweets2)
         );
         $manager->flush();
 

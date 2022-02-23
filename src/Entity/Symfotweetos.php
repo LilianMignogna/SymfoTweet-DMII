@@ -42,9 +42,13 @@ class Symfotweetos implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'symfotweetos', targetEntity: Symfotweets::class, orphanRemoval: true)]
     private $symfotweets;
 
+    #[ORM\OneToMany(mappedBy: 'symfotweetos', targetEntity: SymfoRT::class, orphanRemoval: true)]
+    private $symfoRTs;
+
     public function __construct()
     {
         $this->symfotweets = new ArrayCollection();
+        $this->symfoRTs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -178,6 +182,36 @@ class Symfotweetos implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($symfotweets->getSymfotweetos() === $this) {
                 $symfotweets->setSymfotweetos(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SymfoRT[]
+     */
+    public function getSymfoRTs(): Collection
+    {
+        return $this->symfoRTs;
+    }
+
+    public function addSymfoRT(SymfoRT $symfoRT): self
+    {
+        if (!$this->symfoRTs->contains($symfoRT)) {
+            $this->symfoRTs[] = $symfoRT;
+            $symfoRT->setSymfotweetos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSymfoRT(SymfoRT $symfoRT): self
+    {
+        if ($this->symfoRTs->removeElement($symfoRT)) {
+            // set the owning side to null (unless already changed)
+            if ($symfoRT->getSymfotweetos() === $this) {
+                $symfoRT->setSymfotweetos(null);
             }
         }
 

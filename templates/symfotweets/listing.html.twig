@@ -29,6 +29,13 @@
                 </div>
             </div>
             <p class="my-0">{{ symfotweet.text }}</p>
+            <div class="d-flex justify-content-between border-top mt-3 p-2">
+                {% set countRT = 0 %}
+                {% for symfoRT in symfotweet.symfoRTs %}
+                    {% set countRT = countRT + 1 %}
+                {% endfor %}
+                <div class="RTButton text-center" data-id="{{ symfotweet.id }}">{{ countRT }} SymfoRT</div>
+            </div>
         </div>
     {# </a> #}
 {% endfor %}

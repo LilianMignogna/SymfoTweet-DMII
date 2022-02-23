@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SymfotweetsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SymfotweetsRepository::class)]
@@ -22,6 +24,15 @@ class Symfotweets
 
     #[ORM\Column(type: 'datetime')]
     private $postdate;
+
+    #[ORM\OneToMany(mappedBy: 'symfotweets', targetEntity: SymfoRT::class, orphanRemoval: true)]
+    private $symfoRTs;
+    
+
+    public function __construct()
+    {
+        $this->symfoRTs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +70,36 @@ class Symfotweets
     public function setPostdate(\DateTimeInterface $postdate): self
     {
         $this->postdate = $postdate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SymfoRT[]
+     */
+    public function getSymfoRTs(): Collection
+    {
+        return $this->symfoRTs;
+    }
+
+    public function addSymfoRT(SymfoRT $symfoRT): self
+    {
+        if (!$this->symfoRTs->contains($symfoRT)) {
+            $this->symfoRTs[] = $symfoRT;
+            $symfoRT->setSymfotweets($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSymfoRT(SymfoRT $symfoRT): self
+    {
+        if ($this->symfoRTs->removeElement($symfoRT)) {
+            // set the owning side to null (unless already changed)
+            if ($symfoRT->getSymfotweets() === $this) {
+                $symfoRT->setSymfotweets(null);
+            }
+        }
 
         return $this;
     }

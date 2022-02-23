@@ -4,11 +4,13 @@
 namespace App\Controller;
 
 use App\Entity\Symfotweets;
+use App\Entity\SymfoRT;
 use App\Form\Type\SymfotweetsFormType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -88,5 +90,48 @@ class SymfotweetsController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('symfotweets_list');
+    }
+
+    #[Route('/symfotweets/rt/{symfotweets_id}', name: 'symfotweets_rt')]
+    #[ParamConverter('symfotweets_id', options: ['mapping' => ['symfotweets_id' => 'id']])]
+    public function symfoRT(string $symfotweets_id, ManagerRegistry $doctrine)
+    {
+        $user = $this->getUser();
+        $symfoRTDatabase = $doctrine->getRepository(SymfoRT::class)->findSymfoRTWithSymfotweetIdAndSymfotweetosId($symfotweets_id, $user->getID());
+        // echo '<pre>';
+        // var_dump($symfoRTDatabase);
+        // die;
+
+        if (!$symfoRTDatabase) {
+            $symfoRT = new SymfoRT();
+
+            $symfotweet = $doctrine->getRepository(Symfotweets::class)->find($symfotweets_id);
+            /** @var \App\Entity\Symfotweetos $user */
+            $user = $this->getUser();
+            $symfoRT->setSymfotweetos($user);
+            $symfoRT->setSymfotweets($symfotweet);
+    
+            $entityManager = $doctrine->getManager();
+            $entityManager->persist($symfoRT);
+            $entityManager->flush();
+            return new JsonResponse(array(
+                'status' => 'OK',
+                'message' => "+1"),
+            200);
+        }
+        else{
+            $entityManager = $doctrine->getManager();
+            $entityManager->remove($symfoRTDatabase);
+            $entityManager->flush();
+            return new JsonResponse(array(
+                'status' => 'OK',
+                'message' => "-1"),
+            200);
+        }
+
+        return new JsonResponse(array(
+            'status' => 'Error',
+            'message' => "Error"),
+        400);
     }
 }
