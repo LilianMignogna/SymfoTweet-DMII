@@ -29,11 +29,7 @@ if(rtbutton){
             
             fetch('/symfotweets/rt/'+elementId)
                 .then(function(response) {
-                    if(response.ok) {
-                        response.blob().then(function(myBlob) {
-                          console.log(myBlob);
-                        });
-                      }
+                    element.innerHTML = "Fait";
                 })
         })
     });

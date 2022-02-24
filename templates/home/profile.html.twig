@@ -28,36 +28,92 @@
         </div>
         <p class="my-2">{{ symfotweetos.biography }}</p>
     </div>
-    {% if symfotweetos.symfotweets is empty %}
-        <div class="card col-6 p-4 mx-auto my-3">
-            <p>L'utilisateur n'a pas posté de SymfoTweets</p>
-        </div>
-    {% else %}
-        {% for symfotweet in symfotweetos.symfotweets %}
-            <div class="card col-6 p-4 mx-auto my-3">
-                <div class="d-flex align-items-center mb-3 justify-content-between">
-                    <a class="d-flex align-items-center text-decoration-none text-dark" href="/symfotweetos/{{ symfotweet.symfotweetos.id }}">
-                        <div class="bg-primary rounded-circle p-4"></div>
-                        <div class="d-flex flex-column">
-                            <p class="my-0 ms-2 fw-bold">{{ symfotweet.symfotweetos.name }}<span class="fw-normal"> - {{ symfotweet.postdate|date('j M ') }}</span></p>
-                            <p class="my-0 ms-2">@{{ symfotweet.symfotweetos.username }}</p>
-                        </div>
-                    </a>
-                    <div>
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
-                            {% if is_granted('IS_AUTHENTICATED_FULLY') and (is_granted('ROLE_ADMIN') or app.user.id == symfotweetos.id) %}
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li>
-                                        <a class="dropdown-item text-danger" href="/symfotweets/delete/{{ symfotweet.id }}">Supprimer le symfotweet</a>
-                                    </li>  
-                                </ul>
-                            {% endif %}
+    <div class="col-3 mx-auto d-flex justify-content-between">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#symfotweets" aria-expanded="true" aria-controls="symfotweets">SymfoTweets</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#symfort" aria-expanded="false" aria-controls="symfort">SymfoRT</button>
+    </div>
+    <div class="col-6 p-4 mx-auto accordion-collapse collapse show" id="symfotweets">
+        {% if symfotweetos.symfotweets is empty %}
+            <div class="card p-4 mx-auto my-3">
+                <p>L'utilisateur n'a pas posté de SymfoTweets</p>
+            </div>
+        {% else %}
+            {% for symfotweet in symfotweetos.symfotweets %}
+                <div class="card p-4 mx-auto my-3">
+                    <div class="d-flex align-items-center mb-3 justify-content-between ">
+                        <a class="d-flex align-items-center text-decoration-none text-dark" href="/symfotweetos/{{ symfotweet.symfotweetos.id }}">
+                            <div class="bg-primary rounded-circle p-4"></div>
+                            <div class="d-flex flex-column">
+                                <p class="my-0 ms-2 fw-bold">{{ symfotweet.symfotweetos.name }}<span class="fw-normal"> - {{ symfotweet.postdate|date('j M ') }}</span></p>
+                                <p class="my-0 ms-2">@{{ symfotweet.symfotweetos.username }}</p>
+                            </div>
+                        </a>
+                        <div>
+                            <div class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                                {% if is_granted('IS_AUTHENTICATED_FULLY') and (is_granted('ROLE_ADMIN') or app.user.id == symfotweetos.id) %}
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <li>
+                                            <a class="dropdown-item text-danger" href="/symfotweets/delete/{{ symfotweet.id }}">Supprimer le symfotweet</a>
+                                        </li>  
+                                    </ul>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
+                    <p class="my-0">{{ symfotweet.text }}</p>
+                    <div class="d-flex justify-content-between border-top mt-3 p-2">
+                        {% set countRT = 0 %}
+                        {% for symfoRT in symfotweet.symfoRTs %}
+                            {% set countRT = countRT + 1 %}
+                        {% endfor %}
+                        <div class="RTButton text-center" data-id="{{ symfotweet.id }}">{{ countRT }} SymfoRT</div>
+                        <div class="LikeButton text-center" data-id="{{ symfotweet.id }}">0 SymfoLike</div>
+                    </div>
                 </div>
-                <p class="my-0">{{ symfotweet.text }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="col-6 p-4 mx-auto accordion-collapse collapse" id="symfort">
+        {% if symfotweetos.symfoRTs is empty %}
+            <div class="card p-4 mx-auto my-3">
+                <p>L'utilisateur n'a pas retweeté de SymfoTweets</p>
             </div>
-        {% endfor %}
-    {% endif %}
+        {% else %}
+            {% for symfotweet in symfotweetos.symfoRTs %}
+                <div class="card p-4 mx-auto my-3">
+                    <div class="d-flex align-items-center mb-3 justify-content-between ">
+                        <a class="d-flex align-items-center text-decoration-none text-dark" href="/symfotweetos/{{ symfotweet.symfotweetos.id }}">
+                            <div class="bg-primary rounded-circle p-4"></div>
+                            <div class="d-flex flex-column">
+                                <p class="my-0 ms-2 fw-bold">{{ symfotweet.symfotweets.symfotweetos.name }}<span class="fw-normal"> - {{ symfotweet.symfotweets.postdate|date('j M ') }}</span></p>
+                                <p class="my-0 ms-2">@{{ symfotweet.symfotweets.symfotweetos.username }}</p>
+                            </div>
+                        </a>
+                        <div>
+                            <div class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"></a>
+                                {% if is_granted('IS_AUTHENTICATED_FULLY') and (is_granted('ROLE_ADMIN') or app.user.id == symfotweetos.id) %}
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                        <li>
+                                            <a class="dropdown-item text-danger" href="/symfotweets/delete/{{ symfotweet.id }}">Supprimer le symfotweet</a>
+                                        </li>  
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <p class="my-0">{{ symfotweet.symfotweets.text }}</p>
+                    <div class="d-flex justify-content-between border-top mt-3 p-2">
+                        {% set countRT = 0 %}
+                        {% for symfoRT in symfotweet.symfotweets.symfoRTs %}
+                            {% set countRT = countRT + 1 %}
+                        {% endfor %}
+                        <div class="RTButton text-center" data-id="{{ symfotweet.symfotweets.id }}">{{ countRT }} SymfoRT</div>
+                        <div class="LikeButton text-center" data-id="{{ symfotweet.symfotweets.id }}">0 SymfoLike</div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
 {% endblock %}
