@@ -3,6 +3,22 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-
-
+    <div class="col-12 d-flex">
+        <div class="card col-6 me-1 p-4">
+            <img src="{{ asset("assets/images/symfotweets.png")}}"/>
+        </div>
+        <div class="card col-6 ms-1 p-4">
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <h2>Poster un SymfoTweet</h2>
+                <a class="btn btn-primary me-2" href="/symfotweets/new">Poster</a>
+            {% else %}
+                <h2>Authentification</h2>
+                <div class="d-flex">
+                    <a class="btn btn-primary me-2" href="/login">Se connecter</a>
+                    <a class="btn btn-primary" href="/register">Créer un compte</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
 {% endblock %}
