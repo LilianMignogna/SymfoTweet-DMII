@@ -37,3 +37,6 @@ Lancer le projet pour faire le buzz sur internet
 > php -S 0.0.0.0:8000 -t public
 
 ## Autoévaluation
+Auto évaluation : 4/5
+
+Je sais ou chercher les informations dont j'ai besoin. J'ai déjà pu travailler sur des projets symfony dans le passé (version 3, 4 et 5). Le problème est que je travaille très rarement sur ce genre de projet, que les versions évoluent assez vite. Je n'ai pas le temps d'appréhender toutes les évolutions et je perds les automatismes même si les concepts restent fondamentalement les mêmes.
